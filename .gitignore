@@ -6,6 +6,9 @@ node_modules/
 # Expo
 .expo/
 dist/
+.env
+npm-debug.log
+yarn-error.log
 web-build/
 expo-env.d.ts
 
