@@ -1,11 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { initializeDatabase } from './src/database/database';
+import BarberListScreen from './src/screens/BarberListScreen';
 
 export default function App() {
+  useEffect(() => {
+    initializeDatabase();
+  }, []);
+
+  return <BarberListScreen />;
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.title}>Barber Scheduler</Text>
+      <Text>SQLite database initialized</Text>
     </View>
   );
 }
@@ -13,8 +21,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
