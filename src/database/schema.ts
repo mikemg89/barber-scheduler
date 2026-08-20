@@ -1,7 +1,8 @@
-export const schema = `
+export const CREATE_BARBERS_TABLE = `
 CREATE TABLE IF NOT EXISTS Barbers (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  specialty TEXT NOT NULL
+  specialty TEXT NOT NULL,
+  isActive INTEGER NOT NULL DEFAULT 1
 );
 `;

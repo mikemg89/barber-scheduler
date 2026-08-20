@@ -1,8 +1,20 @@
 import * as SQLite from 'expo-sqlite';
-import { schema } from './schema';
+import { CREATE_BARBERS_TABLE } from './schema';
 
-export const db = SQLite.openDatabaseSync('barber.db');
+let databasePromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
-export const initializeDatabase = () => {
-  db.execSync(schema);
-};
+export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
+  if (!databasePromise) {
+    databasePromise = initializeDatabase();
+  }
+
+  return databasePromise;
+}
+
+async function initializeDatabase(): Promise<SQLite.SQLiteDatabase> {
+  const db = await SQLite.openDatabaseAsync('barber_scheduler.db');
+
+  await db.execAsync(CREATE_BARBERS_TABLE);
+
+  return db;
+}

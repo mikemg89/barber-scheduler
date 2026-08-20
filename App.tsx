@@ -1,32 +1,51 @@
-import { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { initializeDatabase } from './src/database/database';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+
 import BarberListScreen from './src/screens/BarberListScreen';
+import { getDatabase } from './src/database/database';
+import { seedBarbers } from './src/services/barberService';
 
 export default function App() {
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
-    initializeDatabase();
+    async function initializeApp() {
+      try {
+        await getDatabase();
+        await seedBarbers();
+
+        setIsReady(true);
+      } catch (error) {
+        console.error('Database initialization error:', error);
+      }
+    }
+
+    initializeApp();
   }, []);
 
-  return <BarberListScreen />;
+  if (!isReady) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+        <Text style={styles.loadingText}>
+          Loading Barber Scheduler...
+        </Text>
+      </View>
+    );
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Barber Scheduler</Text>
-      <Text>SQLite database initialized</Text>
-    </View>
-  );
+  return <BarberListScreen />;
 }
 
 const styles = StyleSheet.create({
-  container: {
+  loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });
